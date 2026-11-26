@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pos_session_handover_user,pos.session.handover user,model_pos_session_handover,point_of_sale.group_pos_user,1,1,1,0
+access_pos_session_handover_manager,pos.session.handover manager,model_pos_session_handover,point_of_sale.group_pos_manager,1,1,1,1

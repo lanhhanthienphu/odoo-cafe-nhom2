@@ -33,7 +33,7 @@
         <field name="name">pos.session.handover.form</field>
         <field name="model">pos.session.handover</field>
         <field name="arch" type="xml">
-            <form string="Bàn giao ca POS">
+            <form string="Bàn giao ca POS" duplicate="0">
                 <header>
                     <button name="action_submit"
                             string="Gửi"
@@ -59,7 +59,8 @@
                         <field name="session_id"
                                string="Phiên POS"
                                options="{'no_create': True}"
-                               readonly="state != 'draft'"/>
+                               domain="[('state', '=', 'closed'), ('cash_journal_id', '!=', False)]"
+                               readonly="id or state != 'draft'"/>
 
                         <field name="currency_id" invisible="True"/>
 
@@ -67,6 +68,7 @@
                                string="Tiền dự kiến"
                                widget="monetary"
                                options="{'currency_field': 'currency_id'}"
+                               invisible="not id"
                                readonly="True"/>
 
                         <field name="counted_amount"
@@ -79,6 +81,7 @@
                                string="Chênh lệch"
                                widget="monetary"
                                options="{'currency_field': 'currency_id'}"
+                               invisible="not id"
                                readonly="True"/>
                     </group>
                 </sheet>
@@ -104,7 +107,7 @@
                         string="Đã xác nhận"
                         domain="[('state', '=', 'confirmed')]"/>
 
-                <group expand="0" string="Nhóm theo">
+                <group>
                     <filter name="group_by_state"
                             string="Trạng thái"
                             context="{'group_by': 'state'}"/>
