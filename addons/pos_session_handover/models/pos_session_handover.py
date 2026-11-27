@@ -2,6 +2,7 @@ from math import isfinite
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tools import SQL
 
 
 class PosSessionHandover(models.Model):
@@ -34,9 +35,9 @@ class PosSessionHandover(models.Model):
         copy=False,
     )
 
-    _unique_session = models.Constraint(
-        "UNIQUE(session_id)", "This POS session already has a handover."
-    )
+    _sql_constraints = [
+        ("unique_session", "UNIQUE(session_id)", "This POS session already has a handover."),
+    ]
 
     @api.depends("counted_amount", "expected_amount", "currency_id.rounding")
     def _compute_difference_amount(self):
@@ -107,9 +108,15 @@ class PosSessionHandover(models.Model):
 
     def _check_state_for_update(self, state, message, operation="write"):
         self.check_access(operation)
-        self.lock_for_update()
-        self.invalidate_recordset(["state"])
-        if any(handover.state != state for handover in self):
+        if not self:
+            return
+        self.flush_recordset(["state"])
+        current_states = self.env.execute_query(SQL(
+            "SELECT state FROM %s WHERE id IN %s ORDER BY id FOR UPDATE",
+            SQL.identifier(self._table),
+            tuple(self.ids),
+        ))
+        if any(current_state != state for (current_state,) in current_states):
             raise UserError(message)
 
     def action_submit(self):
