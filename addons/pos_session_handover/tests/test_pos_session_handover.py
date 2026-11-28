@@ -1,27 +1,27 @@
 from psycopg2.errors import UniqueViolation
 
-from odoo.addons.point_of_sale.tests.common import CommonPosTest
+from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import Form
 from odoo.tests.common import new_test_user
 
 
-class TestPosSessionHandover(CommonPosTest):
+class TestPosSessionHandover(TestPointOfSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.cashier = new_test_user(
             cls.env, login="handover_cashier",
             groups="base.group_user,point_of_sale.group_pos_user",
-            company_id=cls.pos_config_usd.company_id.id,
+            company_id=cls.pos_config.company_id.id,
         )
         cls.manager = new_test_user(
             cls.env, login="handover_manager",
             groups="base.group_user,point_of_sale.group_pos_manager",
-            company_id=cls.pos_config_usd.company_id.id,
+            company_id=cls.pos_config.company_id.id,
         )
         cls.session = cls.env["pos.session"].create({
-            "config_id": cls.pos_config_usd.id,
+            "config_id": cls.pos_config.id,
             "cash_register_balance_start": 500.0,
             "state": "closed",
         })
@@ -59,6 +59,8 @@ class TestPosSessionHandover(CommonPosTest):
             manager_handover.action_confirm()
         handover.action_submit()
         self.assertEqual(handover.state, "submitted")
+        with self.assertRaises(UserError):
+            handover.write({"counted_amount": 490.0})
         with self.assertRaises(AccessError):
             handover.action_confirm()
         manager_handover.action_confirm()

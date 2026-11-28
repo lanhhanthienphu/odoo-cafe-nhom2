@@ -4,7 +4,7 @@ Dự án quán cà phê Nhóm 2 trên Odoo. Tài liệu được lập ngày 27/
 
 Phụ trách XML views, menu, danh sách, biểu mẫu, bộ lọc, các nút gửi/xác nhận và đối chiếu báo cáo POS với dữ liệu mẫu. Mã giao diện đã được đẩy lên nhánh feature/handover-views và ghép vào main cùng backend bàn giao ca.
 
-README và manifest của bản mã tham chiếu ghi Odoo 19 Community. Trước đó nhóm trao đổi sử dụng Odoo 18. Phiên bản đang chạy trên máy nhóm cần được xác nhận trước bước cài addon và kiểm thử tích hợp. Các kịch bản trong tài liệu là kế hoạch kiểm thử, đang chờ thực hiện trên môi trường nhóm.
+Nhóm dùng Odoo 18 Community. Bản mã tham chiếu lúc lập tài liệu ghi Odoo 19 Community và bản tích hợp hiện tại đã chuyển sang Odoo 18. Các kịch bản trong tài liệu là kế hoạch kiểm thử, đang chờ thực hiện trên môi trường nhóm.
 
 Nhánh làm việc của Lâm là `feature/handover-views`. File giao diện nằm tại `addons/pos_session_handover/views/pos_handover_views.xml`. Model dùng chung là `pos.session.handover`.
 
